@@ -3,7 +3,7 @@ FUNCTION_BLOCK D_DMP_S7400
 
 TITLE = 'Standard 2 Way Damper Control'
 //
-// Dal Elektrik ve Otomasyon A.S. ©2009
+// Dal Elektrik ve Otomasyon A.S. ï¿½2009
 //
 
 //: "VERSION & CHANGE LOG"
@@ -49,12 +49,12 @@ KNOW_HOW_PROTECT
 
     VAR_INPUT
         M_READY         : BOOL; // MCC Ready
-        
+
         S_CLOSE         : BOOL; // Closed Limit Switch Signal
         S_OPEN          : BOOL; // Opened Limit Switch Signal
-        S_TCLOSE        : BOOL; // Closed Torque Switch Signal   
+        S_TCLOSE        : BOOL; // Closed Torque Switch Signal
         S_TOPEN         : BOOL; // Opened Torque Switch Signal
-        
+
         L_LOCAL         : BOOL; // Local Box Local Position
         L_REMOTE        : BOOL; // Local Box Remote Position
         L_STARTC        : BOOL; // Local Box Local Start
@@ -62,7 +62,7 @@ KNOW_HOW_PROTECT
         L_STOP          : BOOL; // Local Box Local Stop
 
         C_SPRDC         : BOOL; // Sporadic ON/OFF
-        
+
         C_STRTC         : BOOL; // Start Condition
         C_STRTAC        : BOOL; // Start Condition (Auto Mode Only)
         C_STRTO         : BOOL; // Start Condition
@@ -87,7 +87,7 @@ KNOW_HOW_PROTECT
         P_NO_LOC        : BOOL; // Local Control Box not Used
         P_SIM           : BOOL; // Simulation Mode On
 
-    
+
         T_START         : REAL := 5;  // Start Delay Time
         T_STOP          : REAL := 10; // Stop Delay Time
         T_OP_MON        : REAL := 3;  // Feedback Ramp Up Delay Time
@@ -108,10 +108,10 @@ KNOW_HOW_PROTECT
 
         MSG_LOCK    {S7_visible:='false'; S7_dynamic:='true'; S7_m_c:='true'}
                     : BOOL := 0;    // Enable 1=Messages locked
-        
+
         MSG_EVID_1  {S7_visible  := 'false';S7_link := 'false'; S7_param := 'false';S7_server := 'alarm_archiv';S7_a_type := 'alarm_8p'}:DWORD ;
         MSG_EVID_2  {S7_visible  := 'false';S7_link := 'false'; S7_param := 'false';S7_server := 'alarm_archiv';S7_a_type := 'alarm_8p'}:DWORD ;
-        
+
 
         S_T         {S7_visible := 'false'; S7_link := 'false'; S7_sampletime:='true'}
                     : REAL := 0.1;  // Sample time value
@@ -267,7 +267,7 @@ KNOW_HOW_PROTECT
         E_SINGLE_STOP     : BOOL;
         LOCAL_MODES : BOOL;
         ALARM8P_1 : ALARM_8P;
-        ALARM8P_2 : ALARM_8P;        
+        ALARM8P_2 : ALARM_8P;
     END_VAR
 
 //|
@@ -343,14 +343,14 @@ IF (RUNUPCNT = 0) THEN
         // Unexpected Close
         TIMERS[_UCLOSE].TV := T_FB_FLT;
         TIMERS[_UCLOSE].IN := NOT S_CLOSE;
-       
+
         _B32.B03   := NOT Q_CLOSE AND NOT E_CLOSE AND F_CLOSE;
          F_CLOSE := NOT TIMERS[_UCLOSE].Q;
-         
+
         // Unexpected Open
         TIMERS[_UOPEN].TV := T_FB_FLT;
         TIMERS[_UOPEN].IN := NOT S_OPEN;
-       
+
         _B32.B04   := NOT Q_OPEN AND NOT E_OPEN AND F_OPEN;
          F_OPEN := NOT TIMERS[_UOPEN].Q;
         // Close missing
@@ -364,24 +364,24 @@ IF (RUNUPCNT = 0) THEN
         // Position fault
         _B32.B07  := F_CLOSE AND F_OPEN;
 
-       
-       
-       
+
+
+
 
         // Close monitoring time
-        
+
         TIMERS[_TCLOSE].TV := T_CL_MON;
         TIMERS[_TCLOSE].IN := (Q_CLOSE AND NOT F_CLOSE);
         _B32.B08 := TIMERS[_TCLOSE].Q;
-        
-        
-        
-      
+
+
+
+
          // Open monitoring time
         TIMERS[_TOPEN].TV := T_OP_MON;
         TIMERS[_TOPEN].IN := (Q_OPEN AND NOT F_OPEN );
         _B32.B09 := TIMERS[_TOPEN].Q;
-      
+
         // Torque Close Switch
         TIMERS[_TSCLOSE].TV := T_FB_FLT;
         TIMERS[_TSCLOSE].IN := NOT S_TCLOSE;
@@ -391,7 +391,7 @@ IF (RUNUPCNT = 0) THEN
         TIMERS[_TSOPEN].TV := T_FB_FLT;
         TIMERS[_TSOPEN].IN := NOT S_TOPEN;
         _B32.B11  := TIMERS[_TSOPEN].Q;
-      
+
         // Protection Interlock Missing
         _B32.B12 := NOT I_PROT OR (( G_AUTO OR G_SINGLE ) AND NOT I_PROTA );
 
@@ -415,17 +415,17 @@ IF (RUNUPCNT = 0) THEN
         IF NOT CMND.SINGLE_STARTC AND NOT F_STARTC  THEN  /////////// EKLENDI
             E_SINGLE_STARTC := FALSE;
         END_IF;
-       
+
         IF NOT CMND.SINGLE_STARTO AND NOT F_STARTO  THEN  /////////// EKLENDI
             E_SINGLE_STARTO := FALSE;
         END_IF;
-       
-       
+
+
         IF CMND.SINGLE_STARTC  THEN
             CMND.SINGLE_STARTO  := FALSE;
               E_SINGLE_STOP    := FALSE;
               E_SINGLE_STARTC  := TRUE;
-            
+
         ELSIF CMND.SINGLE_STARTO  THEN
             CMND.SINGLE_STARTC  := FALSE;
                E_SINGLE_STOP    := FALSE;
@@ -553,7 +553,7 @@ IF (RUNUPCNT = 0) THEN
         IF G_LOCAL AND Q_OPENED AND S_OPEN THEN OS_VISU := 9; END_IF;
         IF G_LOCAL AND Q_CLOSE AND NOT S_CLOSE THEN OS_VISU := 10; END_IF;
         IF G_LOCAL AND Q_OPEN AND NOT S_OPEN THEN OS_VISU := 11; END_IF;
-        
+
 
         IF G_SINGLE AND NOT Q_CLOSED AND NOT Q_OPENED THEN OS_VISU := 17; END_IF;
         IF G_SINGLE AND Q_CLOSED AND S_CLOSE THEN OS_VISU := 13; END_IF;
@@ -561,12 +561,12 @@ IF (RUNUPCNT = 0) THEN
         IF G_SINGLE AND Q_CLOSE AND NOT S_CLOSE THEN OS_VISU := 15; END_IF;
         IF G_SINGLE AND Q_OPEN AND NOT S_OPEN THEN OS_VISU := 16; END_IF;
 
-      
+
         IF G_AUTO AND Q_CLOSED AND S_CLOSE THEN OS_VISU := 4; END_IF;
         IF G_AUTO AND Q_OPENED AND S_OPEN THEN OS_VISU := 5; END_IF;
         IF G_AUTO AND Q_CLOSE AND NOT S_CLOSE  THEN OS_VISU :=6; END_IF;
         IF G_AUTO AND Q_OPEN AND NOT S_OPEN  THEN OS_VISU :=7; END_IF;
-        
+
         IF NOT P_ENABLE THEN OS_VISU := 0; END_IF;
 
         IF (NOT P_ENABLE OR G_LOCAL) AND CMND.MAINTENANCE_OP AND NOT Q_CLOSED AND NOT Q_OPENED THEN OS_VISU := 22; END_IF;
@@ -574,7 +574,7 @@ IF (RUNUPCNT = 0) THEN
         IF (NOT P_ENABLE OR G_LOCAL) AND CMND.MAINTENANCE_OP AND Q_OPENED AND S_OPEN THEN OS_VISU := 19; END_IF;
         IF (NOT P_ENABLE OR G_LOCAL) AND CMND.MAINTENANCE_OP AND Q_CLOSE AND NOT S_CLOSE THEN OS_VISU := 20; END_IF;
         IF (NOT P_ENABLE OR G_LOCAL) AND CMND.MAINTENANCE_OP AND Q_OPEN AND NOT S_OPEN THEN OS_VISU := 21; END_IF;
-       
+
        IF Q_FAULT THEN OS_VISU := 3; END_IF;
         IF OS_FLAGS <> SIGNALS THEN OS_VISU := 2; END_IF;
     //|
@@ -598,8 +598,8 @@ END_IF;
                ,ID    := 16#EEEE // IN: WORD
                ,EV_ID := MSG_EVID_1 // IN: DWORD
                ,SEVERITY := 16#0001 // IN: WORD
-               );   
-        
+               );
+
         ALARM8P_2(EN_R := TRUE // IN: BOOL
                ,SIG_1 := _B32.B08 // IN: BOOL
                ,SIG_2 := _B32.B09 // IN: BOOL
@@ -612,11 +612,9 @@ END_IF;
                ,ID    := 16#EEEE // IN: WORD
                ,EV_ID := MSG_EVID_2 // IN: DWORD
                ,SEVERITY := 16#0001 // IN: WORD
-               );   
+               );
     END_IF;
 
 //|
 
 END_FUNCTION_BLOCK
-
-
